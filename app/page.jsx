@@ -1,4 +1,4 @@
-// File: app/page.js
+// File: app/page.jsx
 "use client"
 import React, { useState, useEffect } from 'react';
 import { Sparkles, Search, Heart, MessageCircle, User } from 'lucide-react';
@@ -9,28 +9,30 @@ import {
   CURRENT_USER, 
   NOTIFICATIONS, 
   TRENDS,
-  MOCK_COMMENTS // Ensure this is exported from mockData.js
+  MOCK_COMMENTS
 }  from '../app/data/mockData';
 
 // --- UI Components ---
-import Toast from './components/ui/Toast'; // Assuming you extracted this
+import Toast from './components/ui/Toast'; 
 import SkeletonPost from './components/ui/SkeletonPost';
 import ShareSheet from './components/ui/ShareSheet';
 import ImageModal from './components/ui/ImageModal';
 
 // --- Layout Components ---
-import Sidebar from './components/layout/SideBar';
-import MobileHeader from './components/layout/MobileHeader'; // Assuming you extracted this
-import MobileNav from './components/layout/MobileNav'; // Assuming you extracted this
-import MobileDrawer from './components/layout/MobileDrawer';
-import Widgets from './components/layout/Widgets';
+// FIX: Changed 'layout' to 'Layout' to match folder name
+import Sidebar from './components/Layout/SideBar';
+import MobileHeader from './components/Layout/MobileHeader'; 
+import MobileNav from './components/Layout/MobileNav'; 
+import MobileDrawer from './components/Layout/MobileDrawer';
+import Widgets from './components/Layout/Widgets';
 
 // --- Feed Components ---
-import StoryTray from './components/feed/StoryTray';
-import CreatePost from './components/feed/CreatePost';
-import Post from './components/feed/Post';
-import ThreadView from './components/feed/ThreadView';
-import MobileComposeModal from './components/feed/MobileComposeModal';
+// FIX: Changed 'feed' to 'Feed' to match folder name
+import StoryTray from './components/Feed/StoryTray';
+import CreatePost from './components/Feed/CreatePost';
+import Post from './components/Feed/Post';
+import ThreadView from './components/Feed/ThreadView';
+import MobileComposeModal from './components/Feed/MobileComposeModal';
 
 // --- Feature Views ---
 import LoginScreen from './components/auth/LoginScreen';
@@ -41,6 +43,7 @@ import EditProfileModal from './components/profile/EditProfileModal';
 import SettingsView from './components/settings/SettingsView';
 
 export default function Home() { 
+  // ... (The rest of your component code remains exactly the same)
   // State Management
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeTab, setActiveTab] = useState('home');
