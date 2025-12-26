@@ -3,7 +3,7 @@
 export const CURRENT_USER = {
   name: "Ayokunle Shittu",
   handle: "@ayostack",
-  avatar: "AD",
+  avatar: 'AS',
   college: "COLPHYS",
   level: "300L",
   bio: "STS Student | Building FunaabFeed 🚀 | Looking for a 200L collab partner for Backend!"

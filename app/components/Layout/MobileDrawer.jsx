@@ -1,17 +1,12 @@
 "use client";
 import React from 'react';
-// 1. Import Icons
-import { Home, Hash, Bell, Mail, User, Settings, X, Sun, Moon, LogOut } from 'lucide-react';
-
-// 2. Import Custom UI
+import { Home, Hash, Bell, Mail, User, Settings, X, LogOut } from 'lucide-react';
 import Avatar from '../ui/Avatar';
-
-// 3. Import Data
 import { CURRENT_USER } from '../../data/mockData';
 
-const MobileDrawer = ({ isOpen, onClose, activeTab, onTabChange, darkMode, toggleTheme }) => {
+const MobileDrawer = ({ isOpen, onClose, activeTab, onTabChange }) => {
   if (!isOpen) return null;
-  
+
   const navItems = [
     { id: 'home', icon: Home, label: 'Home' },
     { id: 'explore', icon: Hash, label: 'Explore' },
@@ -22,49 +17,68 @@ const MobileDrawer = ({ isOpen, onClose, activeTab, onTabChange, darkMode, toggl
   ];
 
   return (
-    <div className="fixed inset-0 z-50 md:hidden">
-      <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in" onClick={onClose} />
-      <div className="absolute left-0 top-0 bottom-0 w-[280px] bg-white dark:bg-slate-950 p-5 flex flex-col shadow-2xl animate-in slide-in-from-left duration-300 transition-colors">
-        <div className="flex justify-between items-center mb-8">
-           <h2 className="font-bold text-xl text-slate-800 dark:text-slate-100">Account Info</h2>
-           <button onClick={onClose} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-600 dark:text-slate-400"><X size={20} /></button>
-        </div>
-        <div className="flex flex-col space-y-1 mb-8 border-b border-slate-100 dark:border-slate-800 pb-8">
-           <Avatar initials={CURRENT_USER.avatar} size="lg" className="mb-2" />
-           <span className="font-bold text-lg text-slate-900 dark:text-white mt-2">{CURRENT_USER.name}</span>
-           <span className="text-slate-500 dark:text-slate-400 text-sm">{CURRENT_USER.handle}</span>
-           <div className="flex gap-4 mt-3 text-sm dark:text-slate-400">
-             <span><b className="text-slate-900 dark:text-white">420</b> Following</span>
-             <span><b className="text-slate-900 dark:text-white">10.5k</b> Followers</span>
-           </div>
-        </div>
+    <div className="fixed inset-0 z-50 flex md:hidden">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
+        onClick={onClose}
+      />
+
+      {/* Drawer Content */}
+      <div className="relative bg-white dark:bg-slate-950 w-[80%] max-w-[300px] h-full shadow-2xl animate-in slide-in-from-left duration-300 flex flex-col">
         
-        <nav className="space-y-1">
-          {navItems.map((item) => (
-             <button
-                key={item.id}
-                onClick={() => { onTabChange(item.id); onClose(); }}
-                className={`flex items-center space-x-4 p-3.5 rounded-xl w-full text-lg transition-colors ${activeTab === item.id ? 'font-bold bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-100' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900'}`}
-              >
-                <item.icon size={24} />
-                <span>{item.label}</span>
-              </button>
-          ))}
-        </nav>
-        
-        <div className="mt-auto border-t border-slate-100 dark:border-slate-800 pt-6 space-y-4">
-           <button onClick={toggleTheme} className="flex items-center space-x-4 p-3 w-full text-slate-600 dark:text-slate-400 font-medium hover:bg-slate-50 dark:hover:bg-slate-900 rounded-xl transition-colors">
-             {darkMode ? <Sun size={22} /> : <Moon size={22} />}
-             <span>{darkMode ? "Light Mode" : "Dark Mode"}</span>
-           </button>
-           <button className="flex items-center space-x-4 p-3 w-full text-red-500 font-medium hover:bg-red-50 dark:hover:bg-red-900/10 rounded-xl transition-colors">
-             <LogOut size={22} />
-             <span>Log out</span>
-           </button>
+        {/* Header Section: Icon Removed */}
+        <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+                 <Avatar initials={CURRENT_USER.avatar} className="w-10 h-10" />
+                 <div>
+                     <p className="font-bold text-slate-900 dark:text-white">{CURRENT_USER.name}</p>
+                     <p className="text-xs text-slate-500">@{CURRENT_USER.handle}</p>
+                 </div>
+            </div>
+            <button 
+                onClick={onClose}
+                className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors"
+            >
+                <X size={20} />
+            </button>
+        </div>
+
+        {/* Navigation Items */}
+        <div className="flex-1 overflow-y-auto py-4 px-2 space-y-1">
+            {navItems.map((item) => (
+                <button
+                    key={item.id}
+                    onClick={() => {
+                        onTabChange(item.id);
+                        onClose();
+                    }}
+                    className={`flex items-center space-x-4 p-3 rounded-xl w-full transition-all duration-200 ${
+                    activeTab === item.id 
+                        ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-900 dark:text-emerald-100 font-bold' 
+                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900'
+                    }`}
+                >
+                    <item.icon 
+                        size={22} 
+                        className={activeTab === item.id ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'} 
+                    />
+                    <span className="text-[15px]">{item.label}</span>
+                </button>
+            ))}
+        </div>
+
+        {/* Footer */}
+        <div className="p-4 border-t border-slate-100 dark:border-slate-800">
+            <button className="flex items-center space-x-3 text-red-600 dark:text-red-400 p-3 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 w-full transition-colors font-medium">
+                <LogOut size={20} />
+                <span>Log out</span>
+            </button>
+            <p className="text-center text-xs text-slate-400 mt-4">FunaabFeed v0.1.0</p>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default MobileDrawer;

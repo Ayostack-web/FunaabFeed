@@ -1,7 +1,7 @@
 // File: app/page.jsx
 "use client"
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Search, Heart, MessageCircle, User } from 'lucide-react';
+import { Sparkles, Search, Heart, MessageCircle, User, ArrowLeft } from 'lucide-react'; // Added ArrowLeft
 
 // --- Data Imports ---
 import { 
@@ -19,7 +19,6 @@ import ShareSheet from './components/ui/ShareSheet';
 import ImageModal from './components/ui/ImageModal';
 
 // --- Layout Components ---
-// FIX: Changed 'layout' to 'Layout' to match folder name
 import Sidebar from './components/Layout/SideBar';
 import MobileHeader from './components/Layout/MobileHeader'; 
 import MobileNav from './components/Layout/MobileNav'; 
@@ -27,7 +26,6 @@ import MobileDrawer from './components/Layout/MobileDrawer';
 import Widgets from './components/Layout/Widgets';
 
 // --- Feed Components ---
-// FIX: Changed 'feed' to 'Feed' to match folder name
 import StoryTray from './components/Feed/StoryTray';
 import CreatePost from './components/Feed/CreatePost';
 import Post from './components/Feed/Post';
@@ -43,7 +41,6 @@ import EditProfileModal from './components/profile/EditProfileModal';
 import SettingsView from './components/settings/SettingsView';
 
 export default function Home() { 
-  // ... (The rest of your component code remains exactly the same)
   // State Management
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeTab, setActiveTab] = useState('home');
@@ -139,6 +136,11 @@ export default function Home() {
     setIsLoading(true);
     setIsLoggedIn(true);
   };
+  
+  // NEW: Simple Back Handler
+  const handleBackToHome = () => {
+      handleTabChange('home');
+  };
 
   // Auth Guard
   if (!isLoggedIn) {
@@ -164,8 +166,6 @@ export default function Home() {
         <Sidebar 
             activeTab={activeTab} 
             onTabChange={handleTabChange} 
-            darkMode={darkMode} 
-            toggleTheme={toggleTheme} 
             onOpenCompose={() => setMobileComposeOpen(true)}
         />
         
@@ -174,13 +174,17 @@ export default function Home() {
           onClose={() => setDrawerOpen(false)}
           activeTab={activeTab}
           onTabChange={handleTabChange}
-          darkMode={darkMode}
-          toggleTheme={toggleTheme}
         />
 
         {/* Main Content Area */}
         <main className="w-full max-w-[600px] border-r border-slate-100 dark:border-slate-800 md:min-h-screen pb-20 md:pb-0 relative transition-colors duration-300" onScroll={handleScroll}>
-          <MobileHeader onOpenDrawer={() => setDrawerOpen(true)} darkMode={darkMode} />
+          
+          {/* FIX: Passed activeTab and onBack to MobileHeader */}
+          <MobileHeader 
+            onOpenDrawer={() => setDrawerOpen(true)} 
+            activeTab={activeTab}
+            onBack={handleBackToHome}
+          />
           
           {selectedChat ? (
              <ChatRoom 
@@ -196,7 +200,7 @@ export default function Home() {
                />
           ) : (
              <>
-                {/* Header Logic */}
+                {/* Header Logic (Desktop) */}
                 <div className={`hidden md:flex sticky top-0 bg-white/85 dark:bg-slate-950/85 backdrop-blur-xl z-20 border-b border-slate-100 dark:border-slate-800 px-4 h-[53px] items-center cursor-pointer transition-all duration-300 ${scrolled ? 'shadow-sm dark:shadow-slate-900' : ''}`}>
                     {activeTab === 'home' ? (
                         <div className="flex w-full h-full">
@@ -219,9 +223,16 @@ export default function Home() {
                             </div>
                         </div>
                     ) : (
-                         <>
+                         <div className="flex items-center gap-3">
+                            {/* FIX: Added Back Button for Desktop too */}
+                            <button 
+                                onClick={handleBackToHome}
+                                className="p-2 -ml-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                            >
+                                <ArrowLeft size={20} className="text-slate-700 dark:text-slate-200" />
+                            </button>
                             <h1 className="font-bold text-xl text-emerald-950 dark:text-emerald-100 tracking-tight capitalize">{activeTab}</h1>
-                        </>
+                        </div>
                     )}
                 </div>
 
@@ -257,7 +268,6 @@ export default function Home() {
 
                 {activeTab === 'notifications' && (
                     <div className="divide-y divide-slate-100 dark:divide-slate-800 animate-in fade-in duration-500">
-                        <div className="p-4 font-bold text-xl border-b border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl sticky top-0 z-10 text-slate-900 dark:text-white">Notifications</div>
                         {NOTIFICATIONS.map(notif => (
                             <div key={notif.id} className="p-4 hover:bg-slate-50 dark:hover:bg-slate-900 flex space-x-3 transition-colors cursor-pointer group">
                                 <div className="pt-1">
@@ -266,7 +276,6 @@ export default function Home() {
                                     {notif.type === 'follow' && <User size={20} className="text-emerald-600 fill-current" />}
                                 </div>
                                 <div className="flex-1">
-                                    {/* You can reuse the Avatar component here */}
                                     <div className="h-8 w-8 rounded-full bg-slate-200 mb-2"></div> 
                                     <p className="text-[15px] text-slate-800 dark:text-slate-200">
                                     {notif.user && <span className="font-bold text-slate-900 dark:text-white group-hover:underline">{notif.user} </span>}
@@ -290,14 +299,14 @@ export default function Home() {
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                                 <span className="relative z-10 text-lg">Events</span>
                             </div>
-                            {/* ... Add other explore cards ... */}
                         </div>
                     </div>
                 )}
 
                 {activeTab === 'messages' && <MessagesView onSelectChat={setSelectedChat} />}
                 {activeTab === 'profile' && <ProfileView onEditProfile={() => setEditProfileOpen(true)} />}
-                {activeTab === 'settings' && <SettingsView />}
+                
+                {activeTab === 'settings' && <SettingsView darkMode={darkMode} toggleTheme={toggleTheme} />}
              </>
           )}
 
